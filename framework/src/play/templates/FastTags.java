@@ -38,6 +38,14 @@ import play.utils.HTML;
  */
 public class FastTags {
 
+	private static String errorClass = "hasError";
+	  
+	static {
+		String errorCls = Play.configuration.getProperty("error.class");
+		if(!StringUtils.isEmpty(errorCls))
+			errorClass = errorCls;
+	}
+	 
     public static void _cache(Map<?, ?> args, Closure body, PrintWriter out, ExecutableTemplate template, int fromLine) {
         String key = args.get("arg").toString();
         String duration = null;
@@ -174,7 +182,7 @@ public class FastTags {
         field.put("flash", flashObj);
         field.put("flashArray", field.get("flash") != null && !StringUtils.isEmpty(field.get("flash").toString()) ? field.get("flash").toString().split(",") : new String[0]);
         field.put("error", Validation.error(_arg));
-        field.put("errorClass", field.get("error") != null ? "hasError" : "");
+        field.put("errorClass", field.get("error") != null ? errorClass : "");
         String[] pieces = _arg.split("\\.");
         Object obj = body.getProperty(pieces[0]);
         if(obj != null){
@@ -257,7 +265,7 @@ public class FastTags {
             throw new TemplateExecutionException(template.template, fromLine, "Please specify the error key", new TagInternalException("Please specify the error key"));
         }
         if (Validation.hasError(args.get("arg").toString())) {
-            out.print("hasError");
+            out.print(errorClass);
         }
     }
 
