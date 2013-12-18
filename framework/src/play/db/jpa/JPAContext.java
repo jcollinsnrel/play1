@@ -23,7 +23,7 @@ public class JPAContext {
         this.jpaConfig = jpaConfig;
 
         EntityManager manager = jpaConfig.newEntityManager();
-        Session session = (Session) JPA.em().getDelegate();
+        Session session = (Session) manager.getDelegate();
 		session.setFlushMode(FlushMode.MANUAL);
         manager.setProperty("org.hibernate.readOnly", readonly);
 
