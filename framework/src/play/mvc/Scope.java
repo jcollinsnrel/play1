@@ -17,6 +17,7 @@ import play.data.parsing.DataParser;
 import play.data.parsing.TextParser;
 import play.data.validation.Validation;
 import play.exceptions.UnexpectedException;
+import play.i18n.Messages;
 import play.libs.Codec;
 import play.libs.Crypto;
 import play.libs.Time;
@@ -101,11 +102,19 @@ public class Scope {
         }
 
         public void error(String value, Object... args) {
-            put("error", String.format(value, args));
+            String msg = Messages.get(value, args);
+            if(msg.equals(value)) //if no i18n, then previous behavior.... 
+            	put("error", String.format(value, args));
+            else
+            	put("error", msg);
         }
 
         public void success(String value, Object... args) {
-            put("success", String.format(value, args));
+            String msg = Messages.get(value, args);
+            if(msg.equals(value)) //if no i18n, then previous behavior.... 
+            	put("success", String.format(value, args));
+            else //else display i18n message
+            	put("success", msg);
         }
 
         public void discard(String key) {
